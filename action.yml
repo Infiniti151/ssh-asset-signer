@@ -24,7 +24,7 @@ inputs:
   generate_allowed_signers:
     description: 'Whether to generate an allowed_signers file for downstream verification.'
     required: false
-    default: 'true'
+    default: false
   sig_dir:
     description: 'Directory path where generated .sig files will be placed.'
     required: false
