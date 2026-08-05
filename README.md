@@ -54,7 +54,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Build Assets
         run: |
@@ -64,14 +64,14 @@ jobs:
         id: sign
         uses: your-org/ssh-asset-signer@v1
         with:
-          private_key: ${{ secrets.SSH_SIGNING_KEY }}
-          passphrase: ${{ secrets.SSH_SIGNING_PASSPHRASE }} # Optional
+          private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }} # Optional
           files: "app-v1.0.0-linux.tar.gz"
           principal: "release-signer@yourcompany.com"
-          generate_allowed_signers: true
+          generate-allowed-signers: true
 
       - name: Upload Signatures to GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: |
             app-v1.0.0-linux.tar.gz.sig
@@ -82,23 +82,23 @@ jobs:
 
 | Input | Required | Default | Description |
 |-------|----------|---------|-------------|
-| **private_key** | Yes | None | Raw PEM or OpenSSH private key string. |
+| **private-key** | Yes | None | Raw PEM or OpenSSH private key string. |
 | **files** | Yes | None | Space‑separated paths of target files/assets to sign. |
 | **passphrase** | No | "" | Passphrase for the private key (if encrypted). |
 | **namespace** | No | "file" | OpenSSH signature namespace (defaults to OpenSSH file‑signing standard *file*). |
-| **principal** | Conditional | "" | Principal ID (e.g., email or identity) added to the allowed_signers file. Required if `generate_allowed_signers` is true. |
-| **generate_allowed_signers** | No | false | Set to "true" to enable automatic generation of the allowed_signers verification file. |
-| **sig_dir** | No | "" | Directory to output generated `.sig` signature files. Defaults to placing `.sig` files alongside source files. |
-| **allowed_signers_dir** | No | "" | Output directory for the allowed_signers file (defaults to working directory). |
+| **principal** | Conditional | "" | Principal ID (e.g., email or identity) added to the allowed_signers file. Required if `generate-allowed-signers` is true. |
+| **generate-allowed-signers** | No | false | Set to "true" to enable automatic generation of the allowed_signers verification file. |
+| **sig-dir** | No | "" | Directory to output generated `.sig` signature files. Defaults to placing `.sig` files alongside source files. |
+| **allowed-signers-dir** | No | "" | Output directory for the allowed_signers file (defaults to working directory). |
 
 ## 📤 Action Outputs
 
 | Output | Description |
 |--------|-------------|
-| **signed_files** | Space‑separated list of successfully signed target file paths. |
-| **sig_files** | Space‑separated list of generated signature file (`.sig`) paths. |
-| **allowed_signers_path** | Absolute path to the generated allowed_signers file (if enabled). |
-| **public_key** | Extracted public key (e.g., `ssh-ed25519 AAAAC3... release-signer@yourcompany.com`). |
+| **signed-files** | Space‑separated list of successfully signed target file paths. |
+| **sig-files** | Space‑separated list of generated signature file (`.sig`) paths. |
+| **allowed-signers-path** | Absolute path to the generated allowed_signers file (if enabled). |
+| **public-key** | Extracted public key (e.g., `ssh-ed25519 AAAAC3... release-signer@yourcompany.com`). |
 
 
 ## 🔍 How to Verify Signatures Locally
