@@ -1,0 +1,65 @@
+name: 'SSH Asset Signer'
+description: 'Cryptographically sign release assets and build artifacts using OpenSSH keys.'
+author: 'Infiniti151'
+
+inputs:
+  private_key:
+    description: 'SSH private key string or path to private key file.'
+    required: true
+  files:
+    description: 'Space-separated list of file paths or globs to sign.'
+    required: true
+  passphrase:
+    description: 'Passphrase for the encrypted SSH private key.'
+    required: false
+    default: ''
+  namespace:
+    description: 'OpenSSH signature namespace tag.'
+    required: false
+    default: 'file'
+  principal:
+    description: 'Principal identity claim. Required if generate_allowed_signers is true.'
+    required: false
+    default: ''
+  generate_allowed_signers:
+    description: 'Whether to generate an allowed_signers file for downstream verification.'
+    required: false
+    default: 'true'
+  sig_dir:
+    description: 'Directory path where generated .sig files will be placed.'
+    required: false
+    default: ''
+  allowed_signers_dir:
+    description: 'Directory path where the allowed_signers file will be created.'
+    required: false
+    default: ''
+
+outputs:
+  signed_files:
+    description: 'Space-separated list of files that were signed.'
+    value: ${{ steps.sign_step.outputs.signed_files }}
+  sig_files:
+    description: 'Space-separated list of generated signature (.sig) file paths.'
+    value: ${{ steps.sign_step.outputs.sig_files }}
+  allowed_signers_path:
+    description: 'Path to the generated allowed_signers file (if enabled).'
+    value: ${{ steps.sign_step.outputs.allowed_signers_path }}
+  public_key:
+    description: 'The extracted SSH public key string used for signing.'
+    value: ${{ steps.sign_step.outputs.public_key }}
+
+runs:
+  using: 'composite'
+  steps:
+    - id: sign_step
+      shell: bash
+      run: ${{ github.action_path }}/sign.sh
+      env:
+        INPUT_PRIVATE_KEY: ${{ inputs.private_key }}
+        INPUT_FILES: ${{ inputs.files }}
+        INPUT_PASSPHRASE: ${{ inputs.passphrase }}
+        INPUT_NAMESPACE: ${{ inputs.namespace }}
+        INPUT_PRINCIPAL: ${{ inputs.principal }}
+        INPUT_GENERATE_ALLOWED_SIGNERS: ${{ inputs.generate_allowed_signers }}
+        INPUT_SIG_DIR: ${{ inputs.sig_dir }}
+        INPUT_ALLOWED_SIGNERS_DIR: ${{ inputs.allowed_signers_dir }}
