@@ -2,8 +2,12 @@ name: 'SSH Asset Signer'
 description: 'Cryptographically sign release assets and build artifacts using OpenSSH keys.'
 author: 'Infiniti151'
 
+branding:
+  icon: 'lock'
+  color: 'green'
+
 inputs:
-  private_key:
+  private-key:
     description: 'SSH private key string or path to private key file.'
     required: true
   files:
@@ -18,35 +22,35 @@ inputs:
     required: false
     default: 'file'
   principal:
-    description: 'Principal identity claim. Required if generate_allowed_signers is true.'
+    description: 'Principal identity claim. Required if generate-allowed-signers is true.'
     required: false
     default: ''
-  generate_allowed_signers:
+  generate-allowed-signers:
     description: 'Whether to generate an allowed_signers file for downstream verification.'
     required: false
     default: false
-  sig_dir:
+  sig-dir:
     description: 'Directory path where generated .sig files will be placed.'
     required: false
     default: ''
-  allowed_signers_dir:
+  allowed-signers-dir:
     description: 'Directory path where the allowed_signers file will be created.'
     required: false
     default: ''
 
 outputs:
-  signed_files:
+  signed-files:
     description: 'Space-separated list of files that were signed.'
-    value: ${{ steps.sign_step.outputs.signed_files }}
-  sig_files:
+    value: ${{ steps.sign_step.outputs.signed-files }}
+  sig-files:
     description: 'Space-separated list of generated signature (.sig) file paths.'
-    value: ${{ steps.sign_step.outputs.sig_files }}
-  allowed_signers_path:
+    value: ${{ steps.sign_step.outputs.sig-files }}
+  allowed-signers-path:
     description: 'Path to the generated allowed_signers file (if enabled).'
-    value: ${{ steps.sign_step.outputs.allowed_signers_path }}
-  public_key:
-    description: 'The extracted SSH public key string used for signing.'
-    value: ${{ steps.sign_step.outputs.public_key }}
+    value: ${{ steps.sign_step.outputs.allowed-signers-path }}
+  public-key:
+    description: 'The extracted SSH public key corresponding to the private signing key.'
+    value: ${{ steps.sign_step.outputs.public-key }}
 
 runs:
   using: 'composite'
@@ -54,12 +58,3 @@ runs:
     - id: sign_step
       shell: bash
       run: ${{ github.action_path }}/sign.sh
-      env:
-        INPUT_PRIVATE_KEY: ${{ inputs.private_key }}
-        INPUT_FILES: ${{ inputs.files }}
-        INPUT_PASSPHRASE: ${{ inputs.passphrase }}
-        INPUT_NAMESPACE: ${{ inputs.namespace }}
-        INPUT_PRINCIPAL: ${{ inputs.principal }}
-        INPUT_GENERATE_ALLOWED_SIGNERS: ${{ inputs.generate_allowed_signers }}
-        INPUT_SIG_DIR: ${{ inputs.sig_dir }}
-        INPUT_ALLOWED_SIGNERS_DIR: ${{ inputs.allowed_signers_dir }}
