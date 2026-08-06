@@ -18,7 +18,14 @@ set_output() {
   local name="$1"
   local value="$2"
   if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
-    echo "${name}=${value}" >> "$GITHUB_OUTPUT"
+    # Create a random EOF delimiter to prevent delimiter collision
+    local delimiter
+    delimiter="EOF_$(dd if=/dev/urandom bs=15 count=1 status=none | base64 | tr -dc 'a-zA-Z0-9')"
+    {
+      echo "${name}<<${delimiter}"
+      echo "${value}"
+      echo "${delimiter}"
+    } >> "$GITHUB_OUTPUT"
   fi
 }
 
@@ -179,15 +186,15 @@ if [[ "$INPUT_GENERATE_ALLOWED_SIGNERS" == "true" ]]; then
 
   ALLOWED_SIGNERS_PATH="${target_dir}/allowed_signers"
   echo "$INPUT_PRINCIPAL $KEY_TYPE_AND_DATA" > "$ALLOWED_SIGNERS_PATH"
-  echo "Generated allowed_signers file at: $ALLOWED_SIGNERS_PATH"
+  echo "🔑 Generated allowed_signers file at: $ALLOWED_SIGNERS_PATH" >&2
 fi
 
 # -----------------------------------------------------------------------------
 # 7. Write Action Step Outputs
 # -----------------------------------------------------------------------------
-set_output "signed_files" "$SIGNED_FILES"
-set_output "sig_files" "$SIG_FILES"
-set_output "allowed_signers_path" "$ALLOWED_SIGNERS_PATH"
-set_output "public_key" "$PUB_KEY_CONTENT"
+set_output "signed-files" "$SIGNED_FILES"
+set_output "sig-files" "$SIG_FILES"
+set_output "allowed-signers-path" "$ALLOWED_SIGNERS_PATH"
+set_output "public-key" "$PUB_KEY_CONTENT"
 
-echo "✅ Successfully signed $SIGNED_COUNT file(s)."
+echo "✅ Successfully signed $SIGNED_COUNT file(s)." >&2
