@@ -62,7 +62,7 @@ jobs:
 
       - name: Sign Release Assets
         id: sign
-        uses: your-org/ssh-asset-signer@v1
+        uses: Infiniti151/ssh-asset-signer@main
         with:
           private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }} # Optional
