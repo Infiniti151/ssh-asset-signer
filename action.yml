@@ -57,4 +57,13 @@ runs:
   steps:
     - id: sign_step
       shell: bash
+      env:
+        INPUT_PRIVATE_KEY: ${{ inputs.private-key }}
+        INPUT_FILES: ${{ inputs.files }}
+        INPUT_PASSPHRASE: ${{ inputs.passphrase }}
+        INPUT_NAMESPACE: ${{ inputs.namespace }}
+        INPUT_PRINCIPAL: ${{ inputs.principal }}
+        INPUT_GENERATE_ALLOWED_SIGNERS: ${{ inputs.generate-allowed-signers }}
+        INPUT_SIG_DIR: ${{ inputs.sig-dir }}
+        INPUT_ALLOWED_SIGNERS_DIR: ${{ inputs.allowed-signers-dir }}
       run: ${{ github.action_path }}/sign.sh
