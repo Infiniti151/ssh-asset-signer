@@ -17,30 +17,36 @@ jobs:
         with:
           fetch-depth: 0 # Required for git-cliff to read history
 
-      - name: Generate Changelog with git-cliff
+      - name: Generate Latest Release Notes with git-cliff
         uses: orhun/git-cliff-action@f50e11560dce63f7c33227798f90b924471a88b5 # v4
         with:
           config: cliff.toml
           args: --latest --strip header
         env:
-          OUTPUT: CHANGELOG.md
+          OUTPUT: release_notes.md
 
-      - name: Read Release Notes
-        id: notes
-        run: |
-          # Store generated changelog notes for gh release
-          echo "NOTES<<EOF" >> $GITHUB_OUTPUT
-          cat CHANGELOG.md >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+      - name: Prepend Latest Release to CHANGELOG.md
+        uses: orhun/git-cliff-action@f50e11560dce63f7c33227798f90b924471a88b5 # v4
+        with:
+          config: cliff.toml
+          args: --latest --prepend CHANGELOG.md
+
+      - name: Commit CHANGELOG.md Update
+        uses: suzuki-shunsuke/commit-action@06e3b49d4706498d325d29bd85adc82ecf2f5d8f # v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          branch: main
+          commit_message: "🤖 chore(release): update CHANGELOG.md for ${{ github.ref_name }} [skip ci]"
+          files: CHANGELOG.md
+          fail_on_self_push: false
 
       - name: Create GitHub Release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh release create "${{ github.ref_name }}" \
-            --title "${{ github.ref_name }}" \
-            --notes "${{ steps.notes.outputs.NOTES }}" \
-            --verify-tag
+        uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228 # v3
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          body_path: release_notes.md
 
       - name: Update Floating Major Version Tag (e.g., v1)
         run: |
@@ -48,4 +54,4 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag -fa "$MAJOR_VERSION" -m "Update $MAJOR_VERSION tag to ${{ github.ref_name }}"
-          git push origin "$MAJOR_VERSION" --force
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git "$MAJOR_VERSION" --force
