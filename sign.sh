@@ -151,6 +151,12 @@ SIGNED_FILES=""
 SIG_FILES=""
 SIGNED_COUNT=0
 
+if [[ "$INPUT_NAMESPACE" != "file" ]]; then
+  echo "🏷️ Signing assets with custom namespace: '$INPUT_NAMESPACE'" >&2
+else
+  echo "🏷️ Signing assets with default namespace: 'file'" >&2
+fi
+
 for file in $INPUT_FILES; do
   if [[ -f "$file" ]]; then
     ssh-keygen -Y sign -f "$PUB_KEY_FILE" -n "$INPUT_NAMESPACE" "$file"
@@ -159,6 +165,7 @@ for file in $INPUT_FILES; do
     if [[ -n "$INPUT_SIG_DIR" ]]; then
       target_sig="${INPUT_SIG_DIR}/${filename}.sig"
       mv "${file}.sig" "$target_sig"
+      echo "📦 Moved signature to: $target_sig" >&2
     else
       target_sig="${file}.sig"
     fi
@@ -186,7 +193,7 @@ if [[ "$INPUT_GENERATE_ALLOWED_SIGNERS" == "true" ]]; then
 
   ALLOWED_SIGNERS_PATH="${target_dir}/allowed_signers"
   echo "$INPUT_PRINCIPAL $KEY_TYPE_AND_DATA" > "$ALLOWED_SIGNERS_PATH"
-  echo "🔑 Generated allowed_signers file at: $ALLOWED_SIGNERS_PATH" >&2
+  echo "🔑 Generated allowed_signers file at '$ALLOWED_SIGNERS_PATH' for principal '$INPUT_PRINCIPAL'." >&2
 fi
 
 # -----------------------------------------------------------------------------
