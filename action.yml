@@ -4,7 +4,7 @@ author: 'Infiniti151'
 
 branding:
   icon: 'lock'
-  color: 'green'
+  color: 'purple'
 
 inputs:
   private-key:

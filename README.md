@@ -74,6 +74,7 @@ jobs:
         uses: softprops/action-gh-release@v3
         with:
           files: |
+            app-v1.0.0-linux.tar.gz
             app-v1.0.0-linux.tar.gz.sig
             allowed_signers
 ```
@@ -81,24 +82,24 @@ jobs:
 ## ⚙️ Action Inputs
 
 | Input | Required | Default | Description |
-|-------|:---:|:---:|-------------|
-| **private-key** | Yes | — | Raw SSH private key string or path to a private key file. |
-| **files** | Yes | — | Space-separated file paths or glob patterns to sign. |
-| **passphrase** | No | "" | Passphrase for the private key (if encrypted). |
-| **namespace** | No |`file` | OpenSSH signature namespace (defaults to standard `file` namespace). |
-| **principal** | Conditional | "" | Principal ID (e.g., email or identity) added to the allowed_signers file. Required if `generate-allowed-signers` is true. |
-| **generate-allowed-signers** | No | false | Set to "true" to enable automatic generation of the `allowed_signers` verification file. |
-| **sig-dir** | No | "" | Directory to output generated `.sig` signature files. Defaults to placing `.sig` files alongside source files. |
-| **allowed-signers-dir** | No | . | Output directory for the `allowed_signers` file (defaults to working directory). |
+|:---:|:---:|:---:|-------------|
+| `private-key` | Yes | — | Raw SSH private key string or path to a private key file. |
+| `files` | Yes | — | Space-separated file paths or glob patterns to sign. |
+| `passphrase` | No | "" | Passphrase for the private key (if encrypted). |
+| `namespace` | No |`file` | OpenSSH signature namespace (defaults to standard `file` namespace). |
+| `principal` | Conditional | "" | Principal ID (e.g., email or identity) added to the allowed_signers file. Required if `generate-allowed-signers` is true. |
+| `generate-allowed-signers` | No | false | Set to "true" to enable automatic generation of the `allowed_signers` verification file. |
+| `sig-dir` | No | "" | Directory to output generated `.sig` signature files. Defaults to placing `.sig` files alongside source files. |
+| `allowed-signers-dir` | No | . | Output directory for the `allowed_signers` file (defaults to working directory). |
 
 ## 📤 Action Outputs
 
 | Output | Description |
-|--------|-------------|
-| **signed-files** | Space‑separated list of successfully signed target file paths. |
-| **sig-files** | Space‑separated list of generated signature file (`.sig`) paths. |
-| **allowed-signers-path** | Path to the generated `allowed_signers` file (empty if generation was not enabled). |
-| **public-key** | Extracted public key (e.g., `ssh-ed25519 AAAAC3...`). |
+|:---:|-------------|
+| `signed-files` | Space‑separated list of successfully signed target file paths. |
+| `sig-files` | Space‑separated list of generated signature file (`.sig`) paths. |
+| `allowed-signers-path` | Path to the generated `allowed_signers` file (empty if generation was not enabled). |
+| `public-key` | Extracted public key (e.g., `ssh-ed25519 AAAAC3...`). |
 
 
 ## 🔍 How to Verify Signatures Locally
