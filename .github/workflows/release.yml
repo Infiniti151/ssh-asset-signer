@@ -51,7 +51,11 @@ jobs:
       - name: Update Floating Major Version Tag (e.g., v1)
         run: |
           MAJOR_VERSION=$(echo "${{ github.ref_name }}" | cut -d. -f1)
+          
+          git fetch origin main
+          
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag -fa "$MAJOR_VERSION" -m "Update $MAJOR_VERSION tag to ${{ github.ref_name }}"
+          
+          git tag -fa "$MAJOR_VERSION" origin/main -m "Update $MAJOR_VERSION tag to ${{ github.ref_name }}"
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git "$MAJOR_VERSION" --force

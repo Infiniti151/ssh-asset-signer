@@ -1,6 +1,8 @@
 # SSH Asset Signer GitHub Action (`ssh-asset-signer`)
 
-[![Build](https://img.shields.io/github/actions/workflow/status/Infiniti151/ssh-asset-signer/release.yml?branch=main&style=for-the-badge&logo=github-actions&logoColor=white&label=Build&color=%23007808)](https://github.com/Infiniti151/ssh-asset-signer/actions/workflows/release.yml) [![License](https://img.shields.io/github/license/Infiniti151/ssh-asset-signer?style=for-the-badge&logo=spdx&logoColor=white&color=yellow&label=License)](https://github.com/Infiniti151/ssh-asset-signer/blob/main/LICENSE)
+[![Marketplace](https://img.shields.io/github/v/release/Infiniti151/ssh-asset-signer?label=Marketplace&style=for-the-badge&logo=github&color=blue)](https://github.com/marketplace/actions/ssh-asset-signer)
+[![Build](https://img.shields.io/github/actions/workflow/status/Infiniti151/ssh-asset-signer/release.yml?branch=main&style=for-the-badge&logo=github-actions&logoColor=white&label=Build&color=%23007808)](https://github.com/Infiniti151/ssh-asset-signer/actions/workflows/release.yml)
+[![License](https://img.shields.io/github/license/Infiniti151/ssh-asset-signer?style=for-the-badge&logo=spdx&logoColor=white&color=yellow&label=License)](https://github.com/Infiniti151/ssh-asset-signer/blob/main/LICENSE)
 
 A lightweight, secure, and zero-dependency GitHub Action designed to cryptographically sign release assets, binaries, tarballs, and build artifacts using OpenSSH signatures (`ssh-keygen -Y sign`).
 
