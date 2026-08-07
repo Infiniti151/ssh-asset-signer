@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1] - 2026-08-07
+
+### ⚙️ Continuous Integration
+- (**release**) Add commit step to push updated CHANGELOG.md
+
+### 📚 Documentation
+- (**readme**) Update usage example to use @v1 instead of @main for ssh-asset-signer
 ## [1.0.0] - 2026-08-07
 ### 🚀 v1.0.0 — Initial Release
 This is the initial release of SSH Asset Signer (Infiniti151/ssh-asset-signer@v1)!
