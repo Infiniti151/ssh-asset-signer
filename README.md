@@ -81,15 +81,15 @@ jobs:
 ## ⚙️ Action Inputs
 
 | Input | Required | Default | Description |
-|-------|----------|---------|-------------|
-| **private-key** | Yes | None | Raw PEM or OpenSSH private key string. |
-| **files** | Yes | None | Space‑separated paths of target files/assets to sign. |
+|-------|:---:|:---:|-------------|
+| **private-key** | Yes | — | Raw SSH private key string or path to a private key file. |
+| **files** | Yes | — | Space-separated file paths or glob patterns to sign. |
 | **passphrase** | No | "" | Passphrase for the private key (if encrypted). |
-| **namespace** | No | "file" | OpenSSH signature namespace (defaults to OpenSSH file‑signing standard *file*). |
+| **namespace** | No |`file` | OpenSSH signature namespace (defaults to standard `file` namespace). |
 | **principal** | Conditional | "" | Principal ID (e.g., email or identity) added to the allowed_signers file. Required if `generate-allowed-signers` is true. |
-| **generate-allowed-signers** | No | false | Set to "true" to enable automatic generation of the allowed_signers verification file. |
+| **generate-allowed-signers** | No | false | Set to "true" to enable automatic generation of the `allowed_signers` verification file. |
 | **sig-dir** | No | "" | Directory to output generated `.sig` signature files. Defaults to placing `.sig` files alongside source files. |
-| **allowed-signers-dir** | No | "" | Output directory for the allowed_signers file (defaults to working directory). |
+| **allowed-signers-dir** | No | . | Output directory for the `allowed_signers` file (defaults to working directory). |
 
 ## 📤 Action Outputs
 
@@ -97,26 +97,45 @@ jobs:
 |--------|-------------|
 | **signed-files** | Space‑separated list of successfully signed target file paths. |
 | **sig-files** | Space‑separated list of generated signature file (`.sig`) paths. |
-| **allowed-signers-path** | Absolute path to the generated allowed_signers file (if enabled). |
-| **public-key** | Extracted public key (e.g., `ssh-ed25519 AAAAC3... release-signer@yourcompany.com`). |
+| **allowed-signers-path** | Path to the generated `allowed_signers` file (empty if generation was not enabled). |
+| **public-key** | Extracted public key (e.g., `ssh-ed25519 AAAAC3...`). |
 
 
 ## 🔍 How to Verify Signatures Locally
 
-End users who download your signed release assets and allowed_signers file can easily verify integrity using OpenSSH:
+End users can verify the integrity of downloaded release assets using standard OpenSSH tools.
+
+### Option A: Using the Generated `allowed_signers` File
+
+If you generated and published an `allowed_signers` file alongside your release assets:
 
 ```bash
-# 1. Verify the asset using the published allowed_signers file
 ssh-keygen -Y verify \
   -f allowed_signers \
-  -I "release-signer@yourcompany.com" \
+  -I "your-principal-id" \
   -n file \
   -s app-v1.0.0-linux.tar.gz.sig \
   < app-v1.0.0-linux.tar.gz
-
-# Successful Output:
-# Good "file" signature for release-signer@yourcompany.com with ED25519 key ...
 ```
+
+### Option B: Verifying with the Public Key
+
+If an allowed_signers file was not generated, you can create one manually using the public key:
+```bash
+# 1. Create a local allowed_signers file with <principal> <public_key>
+echo 'your-principal-id ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI...' > my_allowed_signers
+
+# 2. Verify the asset
+ssh-keygen -Y verify \
+  -f my_allowed_signers \
+  -I "your-principal-id" \
+  -n file \
+  -s app-v1.0.0-linux.tar.gz.sig \
+  < app-v1.0.0-linux.tar.gz
+```
+
+### Expected Output on Success:
+`Good "file" signature for your-principal-id with ED25519 key SHA256:...`
 
 ## 🛡️ License
 
