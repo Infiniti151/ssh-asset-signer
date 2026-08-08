@@ -6,8 +6,6 @@
 
 A lightweight, secure, and zero-dependency GitHub Action designed to cryptographically sign release assets, binaries, tarballs, and build artifacts using OpenSSH signatures (`ssh-keygen -Y sign`).
 
----
-
 ## 💡 Why This Repository Exists
 
 While GitHub Actions has plenty of actions for Git commit/tag signing (`git commit -S`) and SSH network authentication, **there was no dedicated action for signing arbitrary release assets using native OpenSSH keys**.
@@ -15,8 +13,6 @@ While GitHub Actions has plenty of actions for Git commit/tag signing (`git comm
 Historically, release engineers wanting to produce detached `.sig` files for release artifacts had to write custom, fragile inline Bash scripts in their workflows. Managing `ssh-agent` setup, handling passphrases non-interactively without hanging CI runners, masking trace execution logs, and outputting formatted `allowed_signers` files requires non-obvious shell hacks.
 
 `ssh-asset-signer` abstracts all of this into a clean, single-step action.
-
----
 
 ## 📌 Important Distinction: Do You Need This Action?
 
@@ -27,8 +23,6 @@ Historically, release engineers wanting to produce detached `.sig` files for rel
 > * **`webfactory/ssh-agent`** is specifically designed for Git deployment and network authentication (and intentionally rejects passphrases).
 > * **`ssh-asset-signer`** *(this action)* is specifically designed to perform cryptographic file/asset signing (`ssh-keygen -Y sign`) and supports both passphrase-less and passphrase-encrypted private keys.
 
----
-
 ## ✨ Features
 
 * **Native OpenSSH Signing:** Uses standard OpenSSH signature functionality (`ssh-keygen -Y sign`).
@@ -37,8 +31,6 @@ Historically, release engineers wanting to produce detached `.sig` files for rel
 * **`allowed_signers` File Generation:** Optionally creates a ready-to-publish OpenSSH `allowed_signers` file for easy end-user verification.
 * **Glob & Multi-File Support:** Sign single files, spaces-separated files, or directories.
 * **Automatic Cleanup:** Safely purges temporary private key files and terminates spawned `ssh-agent` processes upon job completion (even if build steps crash).
-
----
 
 ## 🚀 Usage Example
 
@@ -142,4 +134,4 @@ ssh-keygen -Y verify \
 
 ## 🛡️ License
 
-Distributed under the MIT License. See LICENSE for more information.
+Distributed under the MIT License. See [LICENSE](https://github.com/Infiniti151/ssh-asset-signer/blob/main/LICENSE) for more information.
